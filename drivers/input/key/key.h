@@ -1,5 +1,5 @@
-#ifndef __BUTTON_H
-#define __BUTTON_H
+#ifndef KEY_H_
+#define KEY_H_
 
 #include <stdint.h>
 #include <stdbool.h>
@@ -61,9 +61,14 @@ extern "C"
      * 返回 0 表示无按键按下，否则返回按键编号（从1开始）
      */
     uint8_t Button_GetPressedKey(void);
+    uint8_t Button_GetLongPressedKey(void); // 获取长按的按键ID，返回0表示无长按
+
+    // 使用封装1：直接查询按键状态，适合简单场景
+    bool Button_IsPressed(uint8_t key_id);     // 返回 true 表示该键正在被按下（消抖后）
+    bool Button_IsLongPressed(uint8_t key_id); // 返回 true 表示该键处于长按状态
 
 #ifdef __cplusplus
 }
 #endif
 
-#endif /* __BUTTON_H */
+#endif /* KEY_H_ */

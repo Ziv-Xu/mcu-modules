@@ -10,10 +10,8 @@
 #define BUTTON_GET_TICK() HAL_GetTick()
 #endif
 
-/* 最大支持按键数量，可根据需要调整 */
-#define BUTTON_MAX_COUNT 16
-/* 事件队列深度 */
-#define BUTTON_EVENT_QUEUE_SIZE 8
+#define BUTTON_MAX_COUNT        16 // 最大支持按键数量
+#define BUTTON_EVENT_QUEUE_SIZE 8  // 事件队列深度,但是是加上只能存入7个是队列，因为后面的函数s_EventQueue_Push会丢弃一个事件以区分满和空
 
 /* 状态机定义 */
 enum
@@ -26,43 +24,43 @@ enum
 };
 
 /* 全局数据 */
-static ButtonState_t          button_states[BUTTON_MAX_COUNT];
-static ButtonHardwareConfig_t button_configs[BUTTON_MAX_COUNT];
-static uint8_t                button_count = 0;
+static ButtonState_t          s_button_states[BUTTON_MAX_COUNT];
+static ButtonHardwareConfig_t s_button_configs[BUTTON_MAX_COUNT];
+static uint8_t                s_button_count = 0;
 
 /* 事件环形队列 */
 static struct
 {
     uint8_t       key_id;
     ButtonEvent_t event;
-} event_queue[BUTTON_EVENT_QUEUE_SIZE];
-static uint8_t queue_head = 0;
-static uint8_t queue_tail = 0;
+} s_event_queue[BUTTON_EVENT_QUEUE_SIZE];
+static uint8_t s_queue_head = 0;
+static uint8_t s_queue_tail = 0;
 
 /* 内部函数：将事件加入队列 */
-static inline bool EventQueue_Push(uint8_t key_id, ButtonEvent_t event)
+static inline bool s_EventQueue_Push(uint8_t key_id, ButtonEvent_t event)
 {
-    uint8_t next = (queue_head + 1) % BUTTON_EVENT_QUEUE_SIZE;
-    if (next == queue_tail)
+    uint8_t next = (s_queue_head + 1) % BUTTON_EVENT_QUEUE_SIZE;
+    if (next == s_queue_tail)
     {
         return false; /* 队列满，丢弃（实际可考虑记录丢失标志） */
     }
-    event_queue[queue_head].key_id = key_id;
-    event_queue[queue_head].event  = event;
-    queue_head                     = next;
+    s_event_queue[s_queue_head].key_id = key_id;
+    s_event_queue[s_queue_head].event  = event;
+    s_queue_head                       = next;
     return true;
 }
 
 /* 内部函数：从队列取出事件 */
-static inline bool EventQueue_Pop(uint8_t *key_id, ButtonEvent_t *event)
+static inline bool s_EventQueue_Pop(uint8_t *key_id, ButtonEvent_t *event)
 {
-    if (queue_head == queue_tail)
+    if (s_queue_head == s_queue_tail)
     {
         return false;
     }
-    *key_id    = event_queue[queue_tail].key_id;
-    *event     = event_queue[queue_tail].event;
-    queue_tail = (queue_tail + 1) % BUTTON_EVENT_QUEUE_SIZE;
+    *key_id      = s_event_queue[s_queue_tail].key_id;
+    *event       = s_event_queue[s_queue_tail].event;
+    s_queue_tail = (s_queue_tail + 1) % BUTTON_EVENT_QUEUE_SIZE;
     return true;
 }
 
@@ -76,11 +74,11 @@ void Button_Init(const ButtonHardwareConfig_t *configs, uint8_t count)
 
     for (uint8_t i = 0; i < count; i++)
     {
-        button_configs[i] = configs[i];
-        memset(&button_states[i], 0, sizeof(ButtonState_t));
+        s_button_configs[i] = configs[i];
+        memset(&s_button_states[i], 0, sizeof(ButtonState_t));
     }
-    button_count = count;
-    queue_head = queue_tail = 0;
+    s_button_count = count;
+    s_queue_head = s_queue_tail = 0;
 }
 
 /* 扫描所有按键 */
@@ -88,13 +86,13 @@ void Button_Scan(void)
 {
     uint32_t now = BUTTON_GET_TICK();
 
-    for (uint8_t i = 0; i < button_count; i++)
+    for (uint8_t i = 0; i < s_button_count; i++)
     {
-        const ButtonHardwareConfig_t *cfg = &button_configs[i];
-        ButtonState_t                *st  = &button_states[i];
+        const ButtonHardwareConfig_t *cfg = &s_button_configs[i];
+        ButtonState_t                *st  = &s_button_states[i];
 
         /* 读取当前原始电平 */
-        uint8_t raw_level = (BUTTON_READ_PIN(cfg->port, cfg->pin) == cfg->active_level) ? 1 : 0;
+        uint8_t raw_level = (BUTTON_READ_PIN(cfg->port, cfg->pin) == cfg->active_level) ? 1 : 0; // 1表示按下，0表示未按下
 
         switch (st->state)
         {
@@ -111,7 +109,7 @@ void Button_Scan(void)
                 if (raw_level == st->last_stable)
                 {
                     /* 电平恢复，返回空闲 */
-                    st->state = STATE_IDLE;
+                    st->state = STATE_IDLE; // 这里回到空闲，会重置时间戳，使比真实的消抖时间更长
                 }
                 else if ((now - st->last_tick) >= cfg->debounce_ms)
                 {
@@ -123,13 +121,13 @@ void Button_Scan(void)
                         st->state        = STATE_PRESSED;
                         st->last_tick    = now;
                         st->long_pressed = false;
-                        EventQueue_Push(i + 1, BUTTON_EVENT_PRESSED);
+                        s_EventQueue_Push(i + 1, BUTTON_EVENT_PRESSED);
                     }
                     else
                     {
                         /* 释放，返回空闲 */
                         st->state = STATE_IDLE;
-                        EventQueue_Push(i + 1, BUTTON_EVENT_RELEASED);
+                        s_EventQueue_Push(i + 1, BUTTON_EVENT_RELEASED);
                     }
                 }
                 break;
@@ -144,15 +142,15 @@ void Button_Scan(void)
                     // 为了统一，直接转入等待释放或再次消抖，简化：直接产生释放事件并重置
                     st->last_stable = 0;
                     st->state       = STATE_IDLE;
-                    EventQueue_Push(i + 1, BUTTON_EVENT_RELEASED);
-                    EventQueue_Push(i + 1, BUTTON_EVENT_CLICK); /* 点击事件 */
+                    s_EventQueue_Push(i + 1, BUTTON_EVENT_RELEASED);
+                    s_EventQueue_Push(i + 1, BUTTON_EVENT_CLICK); /* 点击事件 */
                 }
-                else if (cfg->long_press_ms > 0 && (now - st->last_tick) >= cfg->long_press_ms && !st->long_pressed)
+                else if (cfg->long_press_ms > 0 && (now - st->last_tick) >= cfg->long_press_ms && !st->long_pressed) //! st->long_pressed用于防止重复触发长按事件
                 {
                     /* 达到长按时间 */
                     st->long_pressed = true;
                     st->state        = STATE_LONG_PRESS;
-                    EventQueue_Push(i + 1, BUTTON_EVENT_LONG_PRESS);
+                    s_EventQueue_Push(i + 1, BUTTON_EVENT_LONG_PRESS);
                 }
                 /* 否则继续保持按下状态 */
                 break;
@@ -164,7 +162,7 @@ void Button_Scan(void)
                     st->last_tick   = now;
                     st->last_stable = 0;
                     st->state       = STATE_IDLE;
-                    EventQueue_Push(i + 1, BUTTON_EVENT_RELEASED);
+                    s_EventQueue_Push(i + 1, BUTTON_EVENT_RELEASED);
                 }
                 break;
 
@@ -178,7 +176,7 @@ void Button_Scan(void)
 /* 获取并清除事件 */
 bool Button_GetEvent(uint8_t *key_id, ButtonEvent_t *event)
 {
-    return EventQueue_Pop(key_id, event);
+    return s_EventQueue_Pop(key_id, event);
 }
 
 /* 简化获取按下按键ID（仅响应按下事件） */
@@ -196,4 +194,38 @@ uint8_t Button_GetPressedKey(void)
         /* 否则丢弃（可缓存其他事件，此处简化处理） */
     }
     return 0;
+}
+
+uint8_t Button_GetLongPressedKey(void)
+{
+    uint8_t       key_id;
+    ButtonEvent_t event;
+    /* 遍历队列，寻找第一个按下事件并丢弃其他 */
+    while (Button_GetEvent(&key_id, &event))
+    {
+        if (event == BUTTON_EVENT_LONG_PRESS)
+        {
+            return key_id;
+        }
+        /* 否则丢弃（可缓存其他事件，此处简化处理） */
+    }
+    return 0;
+}
+
+// 使用封装1：直接查询按键状态，适合简单场景
+//  button.c 新增
+bool Button_IsPressed(uint8_t key_id)
+{
+    if (key_id == 0 || key_id > s_button_count)
+        return false;
+    uint8_t idx = key_id - 1;
+    return s_button_states[idx].last_stable == 1; // 稳定按下
+}
+
+bool Button_IsLongPressed(uint8_t key_id)
+{
+    if (key_id == 0 || key_id > s_button_count)
+        return false;
+    uint8_t idx = key_id - 1;
+    return s_button_states[idx].state == STATE_LONG_PRESS;
 }
