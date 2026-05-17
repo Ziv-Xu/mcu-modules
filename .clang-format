@@ -60,8 +60,8 @@ SpaceBeforeParens: ControlStatements
 # 非赋值类二进制运算符在换行时放在行尾，符合阅读习惯
 BreakBeforeBinaryOperators: NonAssignment
 
-# 最多保留4个连续空行，避免代码中出现大片空白
-MaxEmptyLinesToKeep: 4
+# 最多保留1个连续空行，避免代码中出现大片空白
+MaxEmptyLinesToKeep: 1
 
 # 函数返回类型和函数名强制在同一行，避免返回类型单独占一行
 PenaltyReturnTypeOnItsOwnLine: 1000
