@@ -1,0 +1,24 @@
+{
+    // 保存文件时自动格式化（核心配置）
+    "editor.formatOnSave": true,
+    // 强制所有C/C++文件使用clang-format格式化
+    "[c]": {
+        "editor.defaultFormatter": "xaver.clang-format"
+    },
+    "[cpp]": {
+        "editor.defaultFormatter": "xaver.clang-format"
+    },
+    "[h]": {
+        "editor.defaultFormatter": "xaver.clang-format"
+    },
+    // 格式化整个文件（不是只格式化修改过的行）
+    "editor.formatOnSaveMode": "file",
+    // 自动移除行尾多余空格
+    "files.trimTrailingWhitespace": true,
+    // 文件末尾自动添加一个空行（符合C语言标准）
+    "files.insertFinalNewline": true,
+    // 自动删除文件末尾多余的空行
+    "files.trimFinalNewlines": true,
+    // 禁用VSCode自带的C/C++格式化（避免冲突）
+    "C_Cpp.formatting": "Disabled"
+}

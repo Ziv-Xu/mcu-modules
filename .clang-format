@@ -25,8 +25,6 @@ AllowShortFunctionsOnASingleLine: None
 # 禁止if语句写在一行（如if (a) b++;），调试时无法在b++处打断点
 AllowShortIfStatementsOnASingleLine: Never
 
-# 禁止for/while循环写在一行，同上，调试时无法在循环体内打断点
-AllowShortLoopsOnASingleLine: Never
 
 # 禁止空代码块写在一行，保持代码结构一致性
 AllowShortBlocksOnASingleLine: Never
@@ -82,3 +80,5 @@ IndentGotoLabels: false
 
 # 方括号前不加空格
 SpaceBeforeSquareBrackets: false
+
+AllowShortLoopsOnASingleLine: true
