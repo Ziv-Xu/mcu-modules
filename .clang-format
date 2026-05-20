@@ -13,8 +13,8 @@ IndentWidth: 4
 # 绝对禁止使用Tab字符，彻底解决不同编辑器Tab宽度不一致的代码错乱问题，使编译器按Tab时自动插入4个空格
 UseTab: Never
 
-# 每行最大字符数：180，单片机IDE窗口通常较小，可同时并排显示两个文件
-ColumnLimit: 180
+# 每行最大字符数：120，单片机IDE窗口通常较小，可同时并排显示两个文件
+ColumnLimit: 120
 
 # 大括号风格：K&R风格（左括号不换行），最节省垂直空间，适合长代码
 BreakBeforeBraces: Allman
