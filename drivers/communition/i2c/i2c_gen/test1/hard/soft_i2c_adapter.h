@@ -19,7 +19,15 @@
 void soft_i2c_adapter_init(void);
 
 /*=============添加OLED示例=================*/
-void OLED_I2C_Start(void);
-void OLED_I2C_Stop(void);
-void OLED_I2C_SendByte(uint8_t byte);
-void OLED_I2C_WaitAck(void);
+
+void Soft_I2C_Start();
+void Soft_I2C_SendByte(uint8_t byte);
+void Soft_I2C_WaitAck();
+void Soft_I2C_Stop();
+
+/*============= 添加 MPU6050 函数声明 =============*/
+uint8_t mpu_I2C_Write_One_Byte(uint8_t dev_addr, uint8_t reg, uint8_t data);
+uint8_t mpu_I2C_Read_One_Byte(uint8_t dev_addr, uint8_t reg);
+void mpu_I2C_Read_Buf(uint8_t dev_addr, uint8_t reg, uint8_t len, uint8_t *buf);
+
+#endif /* __SOFT_I2C_ADAPTER_H__ */

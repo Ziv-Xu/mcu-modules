@@ -8,7 +8,7 @@
 #include "stm32f1xx_hal.h" // 根据实际MCU更换头文件
 
 /* 静态总线对象 */
-static soft_i2c_bus_1_t i2c_bus_1;
+static soft_i2c_bus_t i2c_bus_1;
 
 /*===========================================================================
  * 底层引脚操作回调函数（需根据实际硬件修改）
@@ -59,15 +59,18 @@ void soft_i2c_adapter_init(void)
     GPIO_InitTypeDef gpio_init = {0};
     __HAL_RCC_GPIOB_CLK_ENABLE();
 
-    SCL: 推挽输出
+    SCL:
+    开漏输出，为了符合I2C规范，SCL和SDA都应配置为开漏输出（GPIO_MODE_OUTPUT_OD），并上拉（GPIO_PULLUP），以便总线空闲时保持高电平，且允许从机拉低线。
+    虽然某些设备可能在推挽模式下也能工作，但不符合I2C标准，而且OLED使用推挽输出就不行，可能导致兼容性问题。
     gpio_init.Pin   = I2C_SCL_PIN_1;
-    gpio_init.Mode  = GPIO_MODE_OUTPUT_PP;
+    gpio_init.Mode  = GPIO_MODE_OUTPUT_OD;
     gpio_init.Speed = GPIO_SPEED_FREQ_HIGH;
     HAL_GPIO_Init(I2C_SCL_PORT_1, &gpio_init);
 
-    SDA: 开漏输出（也可设为推挽，但需注意读操作时先置高）
+    SDA: 开漏输出
     gpio_init.Pin  = I2C_SDA_PIN_1;
     gpio_init.Mode = GPIO_MODE_OUTPUT_OD;
+    gpio_init.Speed = GPIO_SPEED_FREQ_HIGH;
     HAL_GPIO_Init(I2C_SDA_PORT_1, &gpio_init);
     */
 
