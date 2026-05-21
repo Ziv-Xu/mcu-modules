@@ -19,6 +19,8 @@
 
 ## 📁 仓库结构 # mcu-modules
 
+
+
 mcu-modules/
 ├── 📄 README.md                    # 仓库总览、快速开始、贡献指南  
 ├── 📄 LICENSE                      # 开源许可证（推荐MIT）  
@@ -26,6 +28,11 @@ mcu-modules/
 ├── 📄 .gitignore                   # Git忽略文件  
 ├── 📄 .clang-format                # 代码格式化规范  
 ├── 📄 Doxyfile                     # 自动生成文档配置  
+│  
+├── 📁 algos/                        # 详细文档目录  
+│   ├── 📁 smr  
+│   ├── 📁 pid/  
+│   └── 📁 lqr/  
 │  
 ├── 📁 docs/                        # 详细文档目录  
 │   ├── 📄 getting-started.md       # 快速上手教程  

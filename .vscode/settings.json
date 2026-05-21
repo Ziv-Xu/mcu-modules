@@ -14,7 +14,7 @@
     // 格式化整个文件（不是只格式化修改过的行）
     "editor.formatOnSaveMode": "file",
     // 自动移除行尾多余空格
-    "files.trimTrailingWhitespace": true,
+    "files.trimTrailingWhitespace": false,
     // 文件末尾自动添加一个空行（符合C语言标准）
     "files.insertFinalNewline": true,
     // 自动删除文件末尾多余的空行
