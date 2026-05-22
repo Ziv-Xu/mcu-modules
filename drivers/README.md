@@ -6,10 +6,10 @@
 - 输出类：LED, 蜂鸣器, 继电器
 
 ## 🔧 移植指南
-参见 [docs/porting-guide.md](docs/porting-guide.md)
+参见 [docs/porting-guide.md](../docs/porting-guide.md)
 
 ## 📝 代码规范
-参见 [docs/coding-style.md](docs/coding-style.md)
+参见 [docs/coding-style.md](../docs/coding-style.md)
 
 ## 🤝 贡献
 欢迎提交Issue和Pull Request！
