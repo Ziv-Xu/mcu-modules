@@ -13,7 +13,7 @@ static void pca_write_reg(uint8_t reg, uint8_t data)
     IIC_Stop();
 }
 
-// 内部函数：读一个寄存器（用于调试，本例未使用，但保留）
+// 内部函数（取消了static，因为需要在其他文件中调用，此处为了方便，更好的方式是再弄一个函数调用）：读一个寄存器（用于调试，本例未使用，但保留）
 uint8_t pca_read_reg(uint8_t reg)
 {
     uint8_t val = 0;
@@ -36,7 +36,7 @@ uint8_t pca_read_reg(uint8_t reg)
 void pca9685_Init(void)
 {
     pca9685_SetPWMFreq(50.0f);
-    pca_write_reg(PCA9685_MODE2, 0x04);   // 推挽输出
+    pca_write_reg(PCA9685_MODE2, 0x04); // 推挽输出
     pca9685_AllOff();
 }
 
@@ -54,19 +54,19 @@ void pca9685_SetPWMFreq(float freq_hz)
     HAL_Delay(5);
 
     // 3. 计算预分频值
-    prescale = (uint8_t)((25000000.0f / (4096.0f * freq_hz)) + 0.5f) - 1;
+    prescale = (uint8_t) ((25000000.0f / (4096.0f * freq_hz)) + 0.5f) - 1;
 
     // 4. 写入 PRE_SCALE
     pca_write_reg(PCA9685_PRE_SCALE, prescale);
 
     // 5. 退出 Sleep 模式（清除 SLEEP 位）★ 关键修改
-    pca_write_reg(PCA9685_MODE1, old_mode & ~0x10);   // 清除 bit4
-    HAL_Delay(5);   // 等待振荡器稳定（至少 500us）
+    pca_write_reg(PCA9685_MODE1, old_mode & ~0x10); // 清除 bit4
+    HAL_Delay(5);                                   // 等待振荡器稳定（至少 500us）
 
     // 6. 触发 RESTART，使新设置生效
     pca_write_reg(PCA9685_MODE1, (old_mode & ~0x10) | 0x80);
     HAL_Delay(1);
-    pca_write_reg(PCA9685_MODE1, old_mode & ~0x90);   // 清除 SLEEP 和 RESTART
+    pca_write_reg(PCA9685_MODE1, old_mode & ~0x90); // 清除 SLEEP 和 RESTART
 
     // 7. 设置 MODE2 为推挽输出
     pca_write_reg(PCA9685_MODE2, 0x04);
@@ -76,17 +76,18 @@ void pca9685_SetPWMFreq(float freq_hz)
 void pca9685_SetPWM(uint8_t channel, uint16_t off)
 {
     uint8_t reg_base;
-    if (channel > 15) return;
+    if (channel > 15)
+        return;
 
     reg_base = PCA9685_LED0_ON_L + 4 * channel;
 
     // ON = 0
-    pca_write_reg(reg_base,     0x00);
+    pca_write_reg(reg_base, 0x00);
     pca_write_reg(reg_base + 1, 0x00);
     // OFF 低 8 位
-    pca_write_reg(reg_base + 2, (uint8_t)(off & 0xFF));
+    pca_write_reg(reg_base + 2, (uint8_t) (off & 0xFF));
     // OFF 高 4 位（只写低4位）
-    pca_write_reg(reg_base + 3, (uint8_t)((off >> 8) & 0x0F));
+    pca_write_reg(reg_base + 3, (uint8_t) ((off >> 8) & 0x0F));
 }
 
 // 舵机专用：角度 0~180° 转换为 PWM 值并设置
@@ -94,17 +95,20 @@ void pca9685_SetPWM(uint8_t channel, uint16_t off)
 void pca9685_SetServoAngle(uint8_t channel, uint8_t angle)
 {
     uint16_t pwm;
-    float pulse_us;
+    float    pulse_us;
 
-    if (angle > 180) angle = 180;
+    if (angle > 180)
+        angle = 180;
     // 脉冲宽度 (us)：0.5ms + (angle / 180) * 2ms
     pulse_us = 500.0f + angle * 2000.0f / 180.0f;
     // 转换成 12 位计数值：pulse_us / 20000us * 4096
-    pwm = (uint16_t)(pulse_us * 4096.0f / 20000.0f);
+    pwm = (uint16_t) (pulse_us * 4096.0f / 20000.0f);
 
     // 限制范围（防止过界）
-    if (pwm < 102) pwm = 102;   // 对应约 0.5ms
-    if (pwm > 512) pwm = 512;   // 对应约 2.5ms
+    if (pwm < 102)
+        pwm = 102; // 对应约 0.5ms
+    if (pwm > 512)
+        pwm = 512; // 对应约 2.5ms
 
     pca9685_SetPWM(channel, pwm);
 }
@@ -138,7 +142,8 @@ void pca9685_Reset(void)
 // 所有通道输出 0（舵机回到最小位置）
 void pca9685_AllOff(void)
 {
-    for (uint8_t ch = 0; ch < 16; ch++) {
+    for (uint8_t ch = 0; ch < 16; ch++)
+    {
         pca9685_SetPWM(ch, 0);
     }
 }
