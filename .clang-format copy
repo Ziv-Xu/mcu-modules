@@ -1,0 +1,84 @@
+# ==============================================
+# 嵌入式C语言行业标准代码风格配置
+# 适用于：STM32、GD32、ESP32、IAR、Keil等所有单片机平台
+# 版本：v1.0 | 2026-05-17
+# ==============================================
+
+# 基础风格：基于LLVM官方标准
+BasedOnStyle: LLVM
+
+# 缩进宽度：4个空格，嵌入式代码嵌套较深，这是可读性和密度的最佳平衡
+IndentWidth: 4
+
+# 绝对禁止使用Tab字符，彻底解决不同编辑器Tab宽度不一致的代码错乱问题，使编译器按Tab时自动插入4个空格
+UseTab: Never
+
+# 每行最大字符数：180，单片机IDE窗口通常较小，可同时并排显示两个文件
+ColumnLimit: 180
+
+# 大括号风格：K&R风格（左括号不换行），最节省垂直空间，适合长代码
+BreakBeforeBraces: Allman
+
+# 禁止任何函数写在一行，保证所有函数结构一致，便于阅读和调试
+AllowShortFunctionsOnASingleLine: None
+
+# 禁止if语句写在一行（如if (a) b++;），调试时无法在b++处打断点
+AllowShortIfStatementsOnASingleLine: Never
+
+
+# 禁止空代码块写在一行，保持代码结构一致性
+AllowShortBlocksOnASingleLine: Never
+
+# 指针星号对齐：靠近变量名（C语言行业标准）
+# 正确：uint8_t *p_data;
+# 错误：uint8_t* p_data; 会误导人认为uint8_t*是一个类型
+PointerAlignment: Right
+
+# C风格强制转换后加空格，提升可读性：(uint32_t)value 而非 (uint32_t)value
+SpaceAfterCStyleCast: true
+
+# 对齐连续的宏定义，单片机寄存器定义会变得极其整齐
+AlignConsecutiveMacros: true
+
+# 对齐连续的赋值语句，配置结构体时便于对比参数
+AlignConsecutiveAssignments: true
+
+# 对齐连续的变量声明，结构体定义会变得极其整齐
+AlignConsecutiveDeclarations: true
+
+# 不自动排序头文件！单片机头文件有严格的包含顺序，自动排序会导致编译错误
+SortIncludes: false
+
+# case标签缩进一个级别，不与switch对齐，提升代码层次感
+IndentCaseLabels: true
+
+# 只在控制语句（if/for/while）和括号之间加空格，函数名和括号之间不加
+# 正确：if (a) { func(); }
+# 错误：if(a) { func (); }
+SpaceBeforeParens: ControlStatements
+
+# 非赋值类二进制运算符在换行时放在行尾，符合阅读习惯
+BreakBeforeBinaryOperators: NonAssignment
+
+# 最多保留4个连续空行，避免代码中出现大片空白
+MaxEmptyLinesToKeep: 4
+
+# 函数返回类型和函数名强制在同一行，避免返回类型单独占一行
+PenaltyReturnTypeOnItsOwnLine: 1000
+
+# 宏定义的反斜杠左对齐，不要对齐到最右边，便于修改
+AlignEscapedNewlines: Left
+
+# 数组和结构体初始化时左对齐，提升可读性
+AlignArrayOfStructures: Left
+
+# 换行后的缩进宽度与正常缩进一致
+ContinuationIndentWidth: 4
+
+# goto标签不缩进，保持在最左边，符合C语言传统
+IndentGotoLabels: false
+
+# 方括号前不加空格
+SpaceBeforeSquareBrackets: false
+
+AllowShortLoopsOnASingleLine: true
