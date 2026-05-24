@@ -39,6 +39,8 @@ typedef float pid_real_t;
 
 /**
  * @brief 内联函数宏，可跨编译器配置。
+ * @note  通过定义 PID_INLINE 可切换为 static inline、inline 或其他修饰符。后面更具实际情况修改，一般来说都是包含有
+ *        static 的内联函数的
  */
 #ifndef PID_INLINE
 #define PID_INLINE static inline
@@ -125,6 +127,15 @@ typedef float pid_real_t;
      * @param buffer 存储/读取的缓冲区。
      * @param buf_len 缓冲区长度。
      * @return 实际处理的字节数，<0 表示错误。
+     *
+     * @note 这两个函数是参数持久化的接口声明，负责将 pid_params_t 结构体
+     *       在“运行时内存”和“非易失存储（如 EEPROM、Flash）”之间互相转换。
+     *
+     * @note 为什么只声明不实现？
+     *       因为不同的平台和存储介质（板载 EEPROM、外部 Flash、带校验的 Flash
+     *       区域等）实现方式完全不同，而且往往需要加入校验和、版本号等。
+     *       模板库把这个接口暴露出来，强制使用者根据自己的硬件环境去实现，
+     *       既保持了核心代码的平台无关性，又保证了必要的功能扩展点。
      */
     int pid_params_serialize(const pid_params_t *params, uint8_t *buffer, size_t buf_len);
     int pid_params_deserialize(pid_params_t *params, const uint8_t *buffer, size_t buf_len);

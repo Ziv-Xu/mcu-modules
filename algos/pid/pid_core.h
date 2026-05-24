@@ -22,6 +22,10 @@ extern "C"
 
     /**
      * @brief 位置式 PID 核心状态。
+     * @note 为什么要专门弄一个core来装last_error和integral呢？
+     *       积分项的本质：它是一个累积量，必须跨周期保存，所以不能是临时变量。
+     *       微分项也需要上一次误差，所以结构体保存了 last_error 和 integral。而比例项是即时的，不需要保存状态。
+     *       将integral暴露为状态，是为了让外部扩展（如抗饱和）能直接修正积分值，实现核心与扩展的解耦，“合法修改接口”,这正是设计“核心”模块的原因
      */
     typedef struct
     {
@@ -90,6 +94,8 @@ extern "C"
 
     /**
      * @brief 增量式 PID 核心状态。
+     * @note 增量式 PID 的核心状态只需要保存历史误差（last_error 和 prev_error），不需要保存积分项
+     *       因为增量式的积分是通过误差累积实现的，不直接存储积分值。
      */
     typedef struct
     {
