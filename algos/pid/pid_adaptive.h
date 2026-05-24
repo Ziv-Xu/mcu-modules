@@ -6,6 +6,7 @@
 #ifndef PID_ADAPTIVE_H
 #define PID_ADAPTIVE_H
 
+#include "pid_config.h"
 #include "pid_template.h"
 
 #ifdef __cplusplus

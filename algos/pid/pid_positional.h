@@ -6,6 +6,7 @@
 #ifndef PID_POSITIONAL_H
 #define PID_POSITIONAL_H
 
+#include "pid_config.h"
 #include "pid_template.h"
 #include "pid_core.h"
 #include "pid_ext.h"

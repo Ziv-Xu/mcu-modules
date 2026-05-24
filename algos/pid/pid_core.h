@@ -8,6 +8,7 @@
 #ifndef PID_CORE_H
 #define PID_CORE_H
 
+#include "pid_config.h"
 #include "pid_template.h"
 
 #ifdef __cplusplus

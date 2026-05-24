@@ -6,6 +6,7 @@
 #ifndef PID_CASCADE_H
 #define PID_CASCADE_H
 
+#include "pid_config.h"
 #include "pid_template.h"
 
 #ifdef __cplusplus

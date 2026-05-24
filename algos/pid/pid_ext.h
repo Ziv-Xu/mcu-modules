@@ -7,6 +7,7 @@
 #ifndef PID_EXT_H
 #define PID_EXT_H
 
+#include "pid_config.h"
 #include "pid_template.h"
 #include "pid_core.h"
 
