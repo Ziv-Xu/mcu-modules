@@ -41,7 +41,7 @@
 - 理解了pid相关部分并新增了pid_adapter_example.c
 - 新增了eeprom模块的at24cxx部分
 - 新增了mpu6050模块相关的代码和注释
-
+- 新增了新的文件层级learn用来存放相关的学习过程
 
 ---
 ---
