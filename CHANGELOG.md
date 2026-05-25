@@ -36,6 +36,11 @@
 ### Fixed
 - 验证并且修复了pca9685的代码（还待进一步完善）
 
+## [0.0.0.3] - 2026-5-25
+### Added
+- 理解了pid相关部分并新增了pid_adapter_example.c
+- 新增了eeprom模块的at24cxx部分
+
 
 
 ---
