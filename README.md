@@ -27,7 +27,7 @@ mcu-modules/
 ├── 📄 CHANGELOG.md                 # 版本更新日志  
 ├── 📄 .gitignore                   # Git忽略文件  
 ├── 📄 .clang-format                # 代码格式化规范  
-├── 📄 Doxyfile                     # 自动生成文档配置  
+├── 📄 Doxyfile                     # 自动生成文档配置（暂无）  
 │  
 ├── 📁 algos/                        # 详细文档目录  
 │   ├── 📁 smr  
