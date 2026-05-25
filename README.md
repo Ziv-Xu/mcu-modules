@@ -110,6 +110,12 @@ mcu-modules/
 │   ├── 📄 driver_template.h  
 │   └── 📄 port_template.c          # 新平台移植模板  
 │  
+├── 📁 scripts/                     
+│   ├── 📁 移植方便  
+│   │   ├── softi2c_simple.py       # softi2c_simple相关文件移植脚本  
+│   │   └── 📄 README.md  
+│   └── 📄 README.md                 
+│  
 └── 📁 tests/                       # 单元测试目录  
     ├── 📄 README.md  
     ├── 📁 unit/                    # 单元测试  
