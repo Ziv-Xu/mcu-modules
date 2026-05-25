@@ -69,6 +69,11 @@ pid_error_t PID_Positional_Init(pid_controller_t *ctrl, pid_pos_inst_t *inst, co
     return PID_OK;
 }
 
+/**
+ * @brief 计算pid输出。
+ * @param sp   setpoint设定值。
+ * @param pv   process variable过程变量，或者说现在的值。
+ */
 /*---------------------------------------------------------------------------*/
 static pid_error_t pos_compute(pid_controller_t *ctrl, pid_real_t sp, pid_real_t pv, pid_real_t *output)
 {
