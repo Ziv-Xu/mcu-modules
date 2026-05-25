@@ -5,9 +5,20 @@
 [![Standard](https://img.shields.io/badge/Standard-MISRA_C_2012-green.svg)](#)
 [![License](https://img.shields.io/badge/License-MIT-yellow.svg)](#)
 
-一个**极高可移植性、多实例、功能全面**的 MPU6050 传感器驱动库。  
-完全硬件抽象，仅需实现三个接口函数即可运行于 **STM32 / GD32 / ESP32 / AVR / MSP430** 等任何平台。  
+完全硬件抽象，仅需实现**三个接口函数**即可运行于 **STM32 / GD32 / ESP32 / AVR / MSP430** 等多个平台。  
 支持从基础数据读取到 DMP、FIFO、自检、低功耗的全套功能，并通过条件编译实现灵活的代码裁剪。
+
+---
+## 基本知识提要
+
+- 其中mpu6050的fifo是内部集成了一个 1024 字节的硬件 FIFO 缓冲区，专门用于缓存加速度、陀螺仪和温度数据。它完全由芯片自身管理，不需要再引入外部软件FIFO代码（如本仓库中的utils）
+
+- DMP模式（不经过 MCU）：由MPU6050内部的DMP直接读取磁力计数据，自动完成9轴融合，输出四元数。MCU 无需关心磁力计。
+
+- 辅助 I2C 直通模式（Bypass Mode）是 MPU6050 提供的一种硬件桥接功能。  
+简单来说，它把mpu6050上的一组辅助I2C总线（AUX_CL / AUX_DA也就是丝印上的xcl和xda）直接短接到主I2C总线上，让主控MCU能够像访问同一总线的设备一样，直接与挂在辅助总线上的传感器（如磁力计）通信。相当于i2c的一主多从  
+一般用来连接外置的三轴磁力计，使6050的六轴拓展成九轴。  
+此模式和DMP模式互斥，不能混合使用。
 
 ---
 
@@ -48,15 +59,18 @@
 根据你的平台实现三个函数：
 
 ```c
-int32_t my_i2c_read(uint8_t dev_addr, uint8_t reg_addr, uint8_t *data, uint8_t len) {
+int32_t my_i2c_read(uint8_t dev_addr, uint8_t reg_addr, uint8_t *data, uint8_t len) 
+{
     // 使用你的 I2C 库进行连续读操作，返回 0 表示成功
 }
 
-int32_t my_i2c_write(uint8_t dev_addr, uint8_t reg_addr, const uint8_t *data, uint8_t len) {
+int32_t my_i2c_write(uint8_t dev_addr, uint8_t reg_addr, const uint8_t *data, uint8_t len) 
+{
     // 使用你的 I2C 库进行连续写操作，返回 0 表示成功
 }
 
-void my_delay_ms(uint32_t ms) {
+void my_delay_ms(uint32_t ms) 
+{
     // 毫秒级延时
 }
 ```
@@ -66,7 +80,8 @@ void my_delay_ms(uint32_t ms) {
 ```c
 #include "mpu6050.h"
 
-int main(void) {
+int main(void) 
+{
     MPU6050_HandleTypeDef mpu;
     MPU6050_ConfigTypeDef config = {0};
     float accel[3], gyro[3];
