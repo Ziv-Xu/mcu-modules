@@ -322,6 +322,10 @@ extern "C"
      * @brief 配置中断源并使能中断
      * @param hmpu 设备句柄
      * @param int_mask 中断源掩码 (MPU6050_IntSource 组合)
+     * @note  具体用法：
+     *        只使能数据就绪中断:              MPU6050_SetInterrupts(&mpu, MPU6050_INT_DATA_RDY);
+     *        同时使能运动检测和自由落体中断:   MPU6050_SetInterrupts(&mpu, MPU6050_INT_MOTION | MPU6050_INT_FREE_FALL);
+     *        如果您传入0，则所有中断都会被禁止，所以它不会一下子启动所有中断，而是精确控制哪些中断被激活
      * @return 错误码
      */
     MPU6050_Status MPU6050_SetInterrupts(MPU6050_HandleTypeDef *hmpu, uint8_t int_mask);
