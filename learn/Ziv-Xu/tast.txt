@@ -1,2 +1,10 @@
 mpu6050的零偏校准加一个手动的
 mpu6050模板的Bypass模式只有禁用和启动，没有给出读取外部三轴磁力计的相关函数，后续补充
+驱动未直接提供“退出循环模式”的专用函数，因为通常重新初始化即可，或用户自行组合 ModifyReg 操作（这个需要注意一下）。如下：
+    // 清除 CYCLE 位，重新开启陀螺仪
+    MPU6050_WakeUp(&mpu);          // 清除 SLEEP 和 CYCLE 位
+    MPU6050_SetCycleMode(&mpu, 0); // 实际会报错，更规范的做法是直接写寄存器
+    // 或调用驱动未提供但可手动修改：
+    WriteReg(&mpu, MPU6050_REG_PWR_MGMT_1, config.ClockSource);
+    WriteReg(&mpu, MPU6050_REG_PWR_MGMT_2, 0x00);  // 启用陀螺仪
+低功耗模式需要进一步完善使用方法
