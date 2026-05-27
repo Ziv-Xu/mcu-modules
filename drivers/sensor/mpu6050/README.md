@@ -5,9 +5,6 @@
 [![Standard](https://img.shields.io/badge/Standard-MISRA_C_2012-green.svg)](#)
 [![License](https://img.shields.io/badge/License-MIT-yellow.svg)](#)
 
-完全硬件抽象，仅需实现**三个接口函数**即可运行于 **STM32 / GD32 / ESP32 / AVR / MSP430** 等多个平台。  
-支持从基础数据读取到 DMP、FIFO、自检、低功耗的全套功能，并通过条件编译实现灵活的代码裁剪。
-
 ---
 ## 基本知识提要
 
