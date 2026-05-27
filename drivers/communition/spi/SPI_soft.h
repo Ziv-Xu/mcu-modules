@@ -1,13 +1,14 @@
-/*
-*author RanXin
-*date 2026-05-27
-*description 软件SPI接口定义，实现软件SPI
-*硬件SPI目前还未尝试。
-*除了MISO引脚，其他引脚都需要设置为推挽输出，MISO引脚设置为输入（一般配有上拉输入）。CS引脚的初始电平应该为HIGH。
-*SPI设备在使用前需要先进行复位，复位方法是将RST引脚拉低至少10ms，然后再拉高。
-warning 在使用SPI总线时，确保没有其他设备同时访问总线，以避免冲突和数据损坏。
-        读指令还没有测试过，需谨慎。
-*/
+/** @file SPI_soft.h
+ * @author RanXin
+ * @date 2026-05-27
+ * @brief  软件SPI接口定义，实现软件SPI
+ * @note  硬件SPI目前还未尝试。
+ * @details 除了MISO引脚，其他引脚都需要设置为推挽输出，MISO引脚设置为输入（一般配有上拉输入）。
+ *          CS引脚的初始电平应该为HIGH。
+ * @brief SPI设备在使用前需要先进行复位，复位方法是将RST引脚拉低至少10ms，然后再拉高。
+ * @warning 在使用SPI总线时，确保没有其他设备同时访问总线，以避免冲突和数据损坏。
+ *         读指令还没有测试过，需谨慎。
+ */
 
 #ifndef __SPI_SOFT_H
 #define __SPI_SOFT_H
