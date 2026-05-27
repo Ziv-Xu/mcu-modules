@@ -196,6 +196,13 @@ MPU6050_Status MPU6050_Init(MPU6050_HandleTypeDef *hmpu, const MPU6050_ConfigTyp
     }
 
     /* 1. 复位设备 (确保从已知状态启动) */
+    /*
+    先复位的原因和好处：
+    1.清除未知或残留状态芯片上电后虽然大部分寄存器有默认值，但若之前曾与其他程序共用I2C总线、或发生过通信错误、或设备处于非正常模式，可能导致某些寄存器处于不可预期状态。软件复位能将所有寄存器恢复为出厂默认值，确保后续配置从确定的基准开始。
+    2.终止可能正在进行的内部操作复位会立即中止 FIFO、DMP（如果之前被启用）、传感器数据采集等内部过程，避免新旧配置冲突。
+    3.保证时钟与电源状态稳定复位后PWR_MGMT_1的默认值为0x40（仅睡眠位置1），芯片处于低功耗待唤醒状态。随后驱动程序显式配置时钟源（ClockSource）并唤醒设备，可避免因之前错误的时钟设置导致I2C通信异常或传感器数据无效。
+    4.提高多实例或热重启的可靠性若系统支持多个MPU6050或需要在不掉电的情况下重新初始化设备，软件复位可以确保每个实例都从相同的初始状态开始，避免因上次运行残留配置造成的意外行为。
+    */
     status = WriteReg(hmpu, MPU6050_REG_PWR_MGMT_1, 0x80U); /* 复位所有寄存器 */
     if (status != MPU6050_OK)
         return status;
@@ -803,7 +810,7 @@ MPU6050_Status MPU6050_DMP_GetGyro(MPU6050_HandleTypeDef *hmpu, float gyro[3])
 }
 #endif /* MPU6050_USE_DMP */
 
-/* ------------ 辅助 I2C ------------ */
+/* ------------ 辅助 I2C 直通模式 ------------ */
 #if MPU6050_USE_AUX_I2C
 MPU6050_Status MPU6050_SetBypassMode(MPU6050_HandleTypeDef *hmpu, uint8_t enable)
 {
