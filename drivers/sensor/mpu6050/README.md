@@ -88,6 +88,13 @@ int main(void)
 
     // 填充句柄
     mpu.DeviceAddr = MPU6050_DEFAULT_DEVICE_ADDR;
+    //可以通过注册函数赋值
+    /*
+    MPU6050_RegisterI2CReadFunc(&mpu, my_i2c_read);
+    MPU6050_RegisterI2CWriteFunc(&mpu, my_i2c_write);
+    MPU6050_RegisterDelayFunc(&mpu, my_delay_ms);
+    */
+    //也可以直接赋值
     mpu.I2C_Read   = my_i2c_read;
     mpu.I2C_Write  = my_i2c_write;
     mpu.DelayMs    = my_delay_ms;

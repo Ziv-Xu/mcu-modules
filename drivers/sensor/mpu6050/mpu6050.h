@@ -177,7 +177,7 @@ extern "C"
         MPU6050_I2C_WriteFunc I2C_Write;  /**< I2C 写函数指针 */
         MPU6050_DelayMsFunc   DelayMs;    /**< 毫秒延时函数指针 */
 
-        /* 内部状态 (用户无需关心) */
+        /* 内部状态 */
         uint8_t IsInit; /**< 初始化完成标志 */
 
         /* 满量程与换算系数 (内部使用) */
