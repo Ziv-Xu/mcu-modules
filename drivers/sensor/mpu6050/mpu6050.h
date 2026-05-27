@@ -481,10 +481,15 @@ extern "C"
 
 /*---------------------------- 寄存器定义 ---------------------------------*/
 /* 以下为 MPU6050 常用寄存器地址（内部使用，不依赖魔数） */
-#define MPU6050_REG_WHO_AM_I      0x75U
-#define MPU6050_REG_USER_CTRL     0x6AU
-#define MPU6050_REG_PWR_MGMT_1    0x6BU
-#define MPU6050_REG_PWR_MGMT_2    0x6CU
+#define MPU6050_REG_WHO_AM_I   0x75U
+#define MPU6050_REG_USER_CTRL  0x6AU
+#define MPU6050_REG_PWR_MGMT_1 0x6BU
+#define MPU6050_REG_PWR_MGMT_2 0x6CU
+/* DMP 相关寄存器 */
+#define MPU6050_REG_BANK_SEL       0x6DU
+#define MPU6050_REG_MEM_START_ADDR 0x6EU
+#define MPU6050_REG_MEM_R_W        0x6FU
+
 #define MPU6050_REG_SMPLRT_DIV    0x19U
 #define MPU6050_REG_CONFIG        0x1AU
 #define MPU6050_REG_GYRO_CONFIG   0x1BU

@@ -69,7 +69,7 @@ PenaltyReturnTypeOnItsOwnLine: 1000
 AlignEscapedNewlines: Left
 
 # 数组和结构体初始化时左对齐，提升可读性
-AlignArrayOfStructures: Left
+AlignArrayOfStructures: None
 
 # 换行后的缩进宽度与正常缩进一致
 ContinuationIndentWidth: 4
