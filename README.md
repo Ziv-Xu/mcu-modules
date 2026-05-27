@@ -27,7 +27,7 @@ mcu-modules/
 ├── 📄 CHANGELOG.md                 # 版本更新日志  
 ├── 📄 .gitignore                   # Git忽略文件  
 ├── 📄 .clang-format                # 代码格式化规范  
-├── 📄 Doxyfile                     # 自动生成文档配置  
+├── 📄 Doxyfile                     # 自动生成文档配置（暂无）  
 │  
 ├── 📁 algos/                        # 详细文档目录  
 │   ├── 📁 smr  
@@ -109,6 +109,12 @@ mcu-modules/
 │   ├── 📄 driver_template.c        # 新驱动模板  
 │   ├── 📄 driver_template.h  
 │   └── 📄 port_template.c          # 新平台移植模板  
+│  
+├── 📁 scripts/                     
+│   ├── 📁 移植方便  
+│   │   ├── softi2c_simple.py       # softi2c_simple相关文件移植脚本  
+│   │   └── 📄 README.md  
+│   └── 📄 README.md                 
 │  
 └── 📁 tests/                       # 单元测试目录  
     ├── 📄 README.md  
